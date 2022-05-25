@@ -143,7 +143,7 @@ public class Frame extends JFrame{
                         while (num>0) {
                             num=que.getM_POutputWaitingPCBS().size()+que.getM_PInputWaitingPCBS().size()+que.getM_BackupReadyPCBS().size()+que.getM_PReadyPCBS().size();
                             btn_RunAction();
-                            Thread.sleep(dispatch.getNTime()*10);
+                            Thread.sleep(dispatch.getNTime());
                         }
                     }
                 };
@@ -160,13 +160,10 @@ public class Frame extends JFrame{
             String defaultDirectory = "d:\\";
             //默认文件名
             String defaultFilename = "prc.txt";
-
             //设置默认目录
             fileChooser.setCurrentDirectory(new File(defaultDirectory));
-
             //设置默认文件名
             fileChooser.setSelectedFile(new File(defaultFilename));
-
             int option= fileChooser.showOpenDialog(null);
             if(option==JFileChooser.APPROVE_OPTION){
                 System.out.println(fileChooser.getSelectedFile().getName());
@@ -265,6 +262,11 @@ public void  showAllInfo(PCB pcb){
     write(outPutWaitingQue,(LinkedList<PCB>)que.getM_POutputWaitingPCBS());
     write(waitingQue,(LinkedList<PCB>)que.getM_BackupReadyPCBS());
 }
+    }
+
+    public static void main(String[] args) {
+        Frame frame=new Frame();
+        frame.setVisible(true);
     }
 
 }
