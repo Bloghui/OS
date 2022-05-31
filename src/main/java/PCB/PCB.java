@@ -20,12 +20,6 @@ public class PCB {
     private LinkedList<Instruction> m_IcList;
     //指向正在运行或将要运行的指令
     private Instruction m_PRunIC;
-
-    //设置时间片大小
-    public static void setRunTimeSplice(int nTime){
-        m_NTimeSlice=nTime;
-    }
-
     //创建一个进程
     public PCB(String m_PName) {
         this.m_PName = m_PName;
@@ -59,6 +53,7 @@ public class PCB {
         else
             return null;
     }
+    //设置时间片大小
     public static void setM_NTimeSlice(int time){
         m_NTimeSlice=time;
     }

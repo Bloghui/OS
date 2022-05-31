@@ -31,10 +31,11 @@ public class Dispatch  {
     public void writeLog(PCB pcb , String model, Date date) throws IOException {
         log.writeLog(pcb,model,date);
     }
+
     public PCB getPCBFromQue(String m){
         return que.removePCB(m);
     }
-   public  void toQue(PCB pcb) throws InterruptedException, IOException {
+   public  void toQue(PCB pcb) throws  IOException {
                 if(pcb!=null) {
                     //当前运行的指令
                     Instruction instruction = pcb.getM_PRunIC();
@@ -54,7 +55,7 @@ public class Dispatch  {
                             case WAIT:
                                 //调入等待队列
                                 appendQue(pcb,"W");
-                                System.out.println("调入等待队列：" + que.getM_BackupReadyPCBS().size());
+                                System.out.println("调入等待队列：" + que.getM_WaitingPCBS().size());
                                 break;
                             case HALT:
                                 //结束进程
@@ -95,7 +96,7 @@ public class Dispatch  {
                 size=que.getM_POutputWaitingPCBS().size();
                 break;
             case "W":
-                size=que.getM_BackupReadyPCBS().size();
+                size=que.getM_WaitingPCBS().size();
                 break;
             case"R":
                 treadReadyQue(pcb);

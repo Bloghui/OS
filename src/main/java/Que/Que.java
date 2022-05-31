@@ -1,10 +1,6 @@
 package Que;
 
-import Instruction.Instruction;
-import Instruction.InstructionSet;
 import PCB.*;
-
-import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -12,8 +8,8 @@ public class Que {
     //就绪队列
     private Queue<PCB> m_PReadyPCBS;
 
-    //后备就绪队列
-    private Queue<PCB> m_BackupReadyPCBS;
+    //等待就绪队列
+    private Queue<PCB> m_WaitingPCBS;
     //输入等待队列
     private Queue<PCB> m_PInputWaitingPCBS;
     //输出等待队列
@@ -29,7 +25,7 @@ public class Que {
     private Que(){
          //初始化队列
          m_PReadyPCBS=new LinkedList<>();
-         m_BackupReadyPCBS=new LinkedList<>();
+         m_WaitingPCBS =new LinkedList<>();
          m_PInputWaitingPCBS=new LinkedList<>();
          m_POutputWaitingPCBS=new LinkedList<>();
      }
@@ -50,7 +46,7 @@ public class Que {
                 pcb=m_POutputWaitingPCBS.poll();
                 break;
             case  "W":
-                pcb=m_BackupReadyPCBS.poll();
+                pcb= m_WaitingPCBS.poll();
                 break;
         }
         return pcb;
@@ -67,7 +63,7 @@ public class Que {
                 m_POutputWaitingPCBS.offer(pcb);
                 break;
             case  "W":
-                m_BackupReadyPCBS.offer(pcb);
+                m_WaitingPCBS.offer(pcb);
                 break;
         }
     }
@@ -76,12 +72,12 @@ public class Que {
         this.m_PReadyPCBS = m_PReadyPCBS;
     }
 
-    public Queue<PCB> getM_BackupReadyPCBS() {
-        return m_BackupReadyPCBS;
+    public Queue<PCB> getM_WaitingPCBS() {
+        return m_WaitingPCBS;
     }
 
-    public void setM_BackupReadyPCBS(Queue<PCB> m_BackupReadyPCBS) {
-        this.m_BackupReadyPCBS = m_BackupReadyPCBS;
+    public void setM_WaitingPCBS(Queue<PCB> m_WaitingPCBS) {
+        this.m_WaitingPCBS = m_WaitingPCBS;
     }
 
     public Queue<PCB> getM_PInputWaitingPCBS() {

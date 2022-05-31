@@ -135,13 +135,15 @@ public class Frame extends JFrame{
             if (e.getSource() == btn_File) {
                 btn_FileAction();
             } else if (e.getSource() == btn_Run) {
+                btn_Run.setEnabled(false);
+                btn_Stop.setEnabled(true);
                 Runnable runnable = new Runnable() {
                     @SneakyThrows
                     @Override
                     public void run() {
                         int num=1;
                         while (num>0) {
-                            num=que.getM_POutputWaitingPCBS().size()+que.getM_PInputWaitingPCBS().size()+que.getM_BackupReadyPCBS().size()+que.getM_PReadyPCBS().size();
+                            num=que.getM_POutputWaitingPCBS().size()+que.getM_PInputWaitingPCBS().size()+que.getM_WaitingPCBS().size()+que.getM_PReadyPCBS().size();
                             btn_RunAction();
                             Thread.sleep(dispatch.getNTime());
                         }
@@ -151,6 +153,8 @@ public class Frame extends JFrame{
                 test.start();
             }
             else if(e.getSource()==btn_Stop){
+                btn_Stop.setEnabled(false);
+                btn_Run.setEnabled(true);
                 test.interrupt();
             }
         }
@@ -205,11 +209,12 @@ public class Frame extends JFrame{
                 while(que.getM_PReadyPCBS().size()>0){
                     pcb = dispatch.getPCBFromQue("R");
                     dispatch.toQue(pcb);
+                    showEndingPCB(pcb);
                     if(pcb.getM_PRunIC()!=null&&pcb.getM_PRunIC().getM_Set()==InstructionSet.CALC)
                         break;
-                }
+                   }
 
-                System.out.println("队列信息"+que.getM_PReadyPCBS().size()+"\t"+que.getM_PInputWaitingPCBS().size()+"\t"+que.getM_POutputWaitingPCBS().size()+"\t"+que.getM_BackupReadyPCBS().size());
+                System.out.println("队列信息"+que.getM_PReadyPCBS().size()+"\t"+que.getM_PInputWaitingPCBS().size()+"\t"+que.getM_POutputWaitingPCBS().size()+"\t"+que.getM_WaitingPCBS().size());
 
                   showAllInfo(pcb);
                if(pcb!=null||que.getM_PReadyPCBS().size()>0)
@@ -235,13 +240,15 @@ public class Frame extends JFrame{
         public void showRunningProcess(PCB pcb){
             if(pcb!=null&&pcb.getM_PRunIC()!=null&&pcb.getM_PRunIC().getM_Set()==InstructionSet.CALC)
             runProcess.setText(pcb.getM_PName());
-            else if(pcb!=null&&pcb.getM_PRunIC()!=null&&pcb.getM_PRunIC().getM_Set()==InstructionSet.HALT){
-                PCBInfo.setForeground(Color.red);
-                PCBInfo.setText("进程："+pcb.getM_PName()+"运行结束");
-            }
             else
             {
                 runProcess.setText("");
+            }
+        }
+        public void showEndingPCB(PCB pcb){
+            if(pcb!=null&&pcb.getM_PRunIC()!=null&&pcb.getM_PRunIC().getM_Set()==InstructionSet.HALT){
+                PCBInfo.setForeground(Color.red);
+                PCBInfo.setText("进程："+pcb.getM_PName()+"运行结束");
             }
         }
         public void printInfo(PCB pcb){
@@ -251,7 +258,7 @@ public class Frame extends JFrame{
             for (PCB m_pOutputWaitingPCB : que.getM_POutputWaitingPCBS()) {
                 System.out.println("输出等待队列"+m_pOutputWaitingPCB.getM_PName()+m_pOutputWaitingPCB.getM_PRunIC());
             }
-            for (PCB m_pOutputWaitingPCB : que.getM_BackupReadyPCBS()) {
+            for (PCB m_pOutputWaitingPCB : que.getM_WaitingPCBS()) {
                 System.out.println("等待队列"+m_pOutputWaitingPCB.getM_PName()+m_pOutputWaitingPCB.getM_PRunIC());
             }
         }
@@ -260,7 +267,7 @@ public void  showAllInfo(PCB pcb){
     write(textReady, (LinkedList<PCB>) que.getM_PReadyPCBS());
     write(inputWaitingQue, (LinkedList<PCB>) que.getM_PInputWaitingPCBS());
     write(outPutWaitingQue,(LinkedList<PCB>)que.getM_POutputWaitingPCBS());
-    write(waitingQue,(LinkedList<PCB>)que.getM_BackupReadyPCBS());
+    write(waitingQue,(LinkedList<PCB>)que.getM_WaitingPCBS());
 }
     }
 
